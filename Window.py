@@ -1,14 +1,31 @@
 from tkinter import Tk, BOTH, Canvas
 
-class Window():
+class Window:
     def __init__(self, width=0, height=0):
         #Create the root window
-        self.root = Tk()
+        self.__root = Tk()
         # Set the title
-        self.root.title("Maze solver")
+        self.__root.title("Maze solver")
         # Create canvas window
-        self.canvas = Canvas(self.root, width=width, height=height)
-        self.canvas.pack()
-        
+        self.__canvas = Canvas(self.__root, width=width, height=height)
+        self.__canvas.pack()
+        # Set close protocol (links the system's "X" to our close method)
+        self.__root.protocol("WM_DELETE_WINDOW", self.close)
+        # Running state
+        self.__running = False
+
+    def redraw(self):
+        # Update and redraw the canvas
+        self.__root.update_idletasks()
+        self.__root.update()
+
     def wait_for_close(self):
-        self.root.mainloop()
+        # Set the running state to True and start the loop
+        self.__running = True
+        while self.__running:
+            self.redraw()
+    
+    def close(self):
+        # Stop the running loop
+        self.__running = False
+    
