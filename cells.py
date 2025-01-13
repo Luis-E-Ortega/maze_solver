@@ -2,7 +2,7 @@ from Window import *
 from shapes import *
 
 class Cell:
-    def __init__(self, _win, _x1, _y1, _x2, _y2):
+    def __init__(self, _x1, _y1, _x2, _y2, _win=None):
         # Window to draw itself on
         self._win = _win
 
@@ -46,4 +46,3 @@ class Cell:
 
         # Draw the line as red if undo is unset and gray if it is
         self._win.draw_line(through_line, fill_color="red" if not undo else "gray")
-
