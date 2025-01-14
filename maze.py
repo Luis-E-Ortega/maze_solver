@@ -1,5 +1,6 @@
-import time
+import time, random
 from cells import *
+
 
 class Maze:
     # Creates a maze using a 2D grid of cells
@@ -12,6 +13,7 @@ class Maze:
             cell_size_x,
             cell_size_y,
             win=None,
+            seed=None,
     ):
         self.x1 = x1
         self.y1 = y1
@@ -20,6 +22,9 @@ class Maze:
         self.cell_size_x = cell_size_x
         self.cell_size_y = cell_size_y
         self.win = win # Window used for maze
+        self.seed = seed
+        if seed is not None:
+            random.seed(seed)
 
         self._cells = []
         self._create_cells()
@@ -73,3 +78,29 @@ class Maze:
         self._cells[last_col][last_row].has_bottom_wall = False
         # Draw the updated cell
         self._draw_cell(last_col, last_row)
+
+    def _break_walls_r(self, i, j):
+        self._cells[i][j].visited = True
+
+        while True:
+            unvisited = []
+
+            # Top
+            if j-1 >= 0 and not self._cells[i][j-1].visited:
+                unvisited.append((i, j-1))
+
+            # Bottom
+            if j+1 < self.num_rows and not self._cells[i][j+1].visited:
+                unvisited.append((i, j+1))
+
+            # Right
+            if i+1 < self.num_cols and not self._cells[i+1][j].visited:
+                unvisited.append((i+1, j))
+            
+            # Left
+            if i-1 >= 0 and not self._cells[i-1][j].visited:
+                unvisited.append((i-1, j))
+            
+
+
+
