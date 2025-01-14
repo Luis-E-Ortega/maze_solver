@@ -23,18 +23,17 @@ class Cell:
         return center_point
     
     def draw(self):
-        if self.has_left_wall:
-            left_line = Line(Point(self._x1, self._y1), Point(self._x1, self._y2))
-            self._win.draw_line(left_line, "black")
-        if self.has_right_wall:
-            right_line = Line(Point(self._x2, self._y1), Point(self._x2, self._y2))
-            self._win.draw_line(right_line, "black")
-        if self.has_top_wall:
-            top_line = Line(Point(self._x1, self._y1), Point(self._x2, self._y1))
-            self._win.draw_line(top_line, "black")
-        if self.has_bottom_wall:
-            bottom_line = Line(Point(self._x1, self._y2), Point(self._x2, self._y2))
-            self._win.draw_line(bottom_line, "black")
+        # Create positional lines for cells
+        left_line = Line(Point(self._x1, self._y1), Point(self._x1, self._y2))
+        right_line = Line(Point(self._x2, self._y1), Point(self._x2, self._y2))
+        top_line = Line(Point(self._x1, self._y1), Point(self._x2, self._y1))
+        bottom_line = Line(Point(self._x1, self._y2), Point(self._x2, self._y2))
+
+        # Draw black lines for each wall that exists and white lines for those that don't
+        self._win.draw_line(left_line, "black" if self.has_left_wall else "white")
+        self._win.draw_line(right_line, "black" if self.has_right_wall else "white")
+        self._win.draw_line(top_line, "black" if self.has_top_wall else "white")
+        self._win.draw_line(bottom_line, "black" if self.has_bottom_wall else "white")
     
     def draw_move(self, to_cell, undo=False):
         # Get the center point of starting cell and destination cell

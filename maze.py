@@ -23,6 +23,7 @@ class Maze:
 
         self._cells = []
         self._create_cells()
+        self._break_entrance_and_exit()
 
     def _create_cells(self):
         # Iterate through all columns in maze and make a list for them
@@ -39,9 +40,12 @@ class Maze:
                 # Create cells and add them to columns list for 2d array
                 cell = Cell(start_x, start_y, end_x, end_y, self.win)
                 column.append(cell)
-                # Draw the cell after its been added
-                self._draw_cell(i, j)
             self._cells.append(column)
+
+        # Draw all of the cells after they've been added to the list
+        for i in range(self.num_cols):
+            for j in range(self.num_rows):
+                self._draw_cell(i, j)
 
     def _draw_cell(self, i, j):
         if self.win is None:
@@ -55,3 +59,17 @@ class Maze:
     def _animate(self):
         self.win.redraw()
         time.sleep(0.05)
+
+    def _break_entrance_and_exit(self):
+        last_row = self.num_rows - 1
+        last_col = self.num_cols - 1
+
+        # Remove top wall of starting cell
+        self._cells[0][0].has_top_wall = False
+        # Draw the updated cell
+        self._draw_cell(0,0)
+            
+        # Remove bottom wall of ending cell
+        self._cells[last_col][last_row].has_bottom_wall = False
+        # Draw the updated cell
+        self._draw_cell(last_col, last_row)
