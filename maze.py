@@ -28,7 +28,9 @@ class Maze:
 
         self._cells = []
         self._create_cells()
-        self._break_entrance_and_exit()
+        self._break_entrance_and_exit() # Break opening and closing walls
+        self._break_walls_r(0, 0) # Break walls starting at top-left corner (0, 0)
+        self._reset_cells_visited() # Reset the visited flag after using them to break walls for maze creation
 
     def _create_cells(self):
         # Iterate through all columns in maze and make a list for them
@@ -101,6 +103,32 @@ class Maze:
             if i-1 >= 0 and not self._cells[i-1][j].visited:
                 unvisited.append((i-1, j))
             
+            # If there is nowhere adjacent left to visit, simply draw the current cell and return
+            if not unvisited:
+                self._draw_cell(i, j)
+                return
+            # Randomly select which direction to go in from unvisited cells list
+            selected_cell = random.choice(unvisited)
+            
+            # Conditionals to "knock down" appropriate walls for navigation to selected cell
+            if selected_cell == (i, j-1): # Top
+                self._cells[i][j].has_top_wall = False
+                self._cells[selected_cell[0]][selected_cell[1]].has_bottom_wall = False
+            elif selected_cell == (i, j+1): #Bottom
+                self._cells[i][j].has_bottom_wall = False
+                self._cells[selected_cell[0]][selected_cell[1]].has_top_wall = False
+            elif selected_cell == (i+1, j): # Right
+                self._cells[i][j].has_right_wall = False
+                self._cells[selected_cell[0]][selected_cell[1]].has_left_wall = False
+            elif selected_cell == (i-1, j): # Left
+                self._cells[i][j].has_left_wall = False
+                self._cells[selected_cell[0]][selected_cell[1]].has_right_wall = False
+            self._break_walls_r(selected_cell[0], selected_cell[1])
+    
+    def _reset_cells_visited(self):
+        for col in self._cells:
+            for cell in col:
+                cell.visited = False
 
 
 
