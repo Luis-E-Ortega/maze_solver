@@ -130,5 +130,62 @@ class Maze:
             for cell in col:
                 cell.visited = False
 
+    def solve(self):
+        return self._solve_r(0, 0)
+
+
+    def _solve_r(self, i, j):
+        self._animate()
+
+        # For last cell reference
+        last_row = self.num_rows - 1
+        last_col = self.num_cols - 1
+
+        # Mark the current cell as visited
+        self._cells[i][j].visited = True
+        # If the current cell is the last cell, we've solved the maze
+        if self._cells[i][j] == self._cells[last_col][last_row]:
+            return True
+        
+        # Conditionals for navigation to cells
+
+        # Top
+        if j-1 >= 0:
+            top_cell = self._cells[i][j-1]
+            if not top_cell.has_bottom_wall and not top_cell.visited:
+                self._cells[i][j].draw_move(top_cell)
+                if self._solve_r(i, j-1):
+                    return True
+                self._cells[i][j].draw_move(top_cell, undo=True)
+        # Bottom
+        if j + 1 < self.num_rows:
+            bottom_cell = self._cells[i][j+1]
+            if not bottom_cell.has_top_wall and not bottom_cell.visited:
+                self._cells[i][j].draw_move(bottom_cell)
+                if self._solve_r(i, j + 1):
+                    return True
+                self._cells[i][j].draw_move(bottom_cell, undo=True)
+        # Right
+        if i + 1 < self.num_cols:
+            right_cell = self._cells[i+1][j]
+            if not right_cell.has_left_wall and not right_cell.visited:
+                self._cells[i][j].draw_move(right_cell)
+                if self._solve_r(i + 1, j):
+                    return True
+                self._cells[i][j].draw_move(right_cell, undo=True)
+        # Left
+        if i - 1 >= 0:
+            left_cell = self._cells[i-1][j]
+            if not left_cell.has_right_wall and not left_cell.visited:
+                self._cells[i][j].draw_move(left_cell)
+                if self._solve_r(i - 1, j):
+                    return True
+                self._cells[i][j].draw_move(left_cell, undo=True)
+        return False
+        
+
+
+
+
 
 
